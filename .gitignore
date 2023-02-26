@@ -1,0 +1,4 @@
+./.vscode/
+./.venv/
+./nato-tide/
+**/__pycache__/
