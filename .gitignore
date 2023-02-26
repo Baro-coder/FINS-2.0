@@ -1,4 +1,5 @@
-./.vscode/
-./.venv/
-./nato-tide/
+.vscode/
+.venv/
+.nato-tide/
 **/__pycache__/
+get_token
