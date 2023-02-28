@@ -41,13 +41,13 @@ FINS
 
 ```
 
-### [**`bin`**](https://github.com/Baro-coder/FINS-2.0/bin)
+### [**`bin`**](https://github.com/Baro-coder/FINS-2.0/tree/master/bin)
 
 Main bash scripts to executing complex functions using developed scripts and programs with provided data.
 
 ---
 
-### [**`data`**](https://github.com/Baro-coder/FINS-2.0/data)
+### [**`data`**](https://github.com/Baro-coder/FINS-2.0/tree/master/data)
 
 Data collected from UAVs logs.
 
@@ -58,7 +58,7 @@ Data collected from UAVs logs.
 
 ---
 
-### [**`fins-cpp`**](https://github.com/Baro-coder/FINS-2.0/fins-cpp)
+### [**`fins-cpp`**](https://github.com/Baro-coder/FINS-2.0/tree/master/fins-cpp)
 
 #### **C++ project directory**
 
@@ -66,7 +66,7 @@ Project includes compute module software to estimate UAV velocity using UAV iner
 
 ---
 
-### [**`fins-py`**](https://github.com/Baro-coder/FINS-2.0/fins-py)
+### [**`fins-py`**](https://github.com/Baro-coder/FINS-2.0/tree/master/fins-py)
 
 #### **Python project directory**
 
@@ -74,7 +74,7 @@ Project includes datasets comparators and visualizers.
 
 ---
 
-### [**`img`**](https://github.com/Baro-coder/FINS-2.0/img)
+### [**`img`**](https://github.com/Baro-coder/FINS-2.0/tree/master/img)
 
 #### **Images directory**
 
