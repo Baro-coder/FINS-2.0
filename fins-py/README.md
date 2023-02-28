@@ -52,7 +52,7 @@ python ./fins-py/tools/graphs/graph.py ./data/norm/acc.csv ./data/norm/gyro.csv 
 
 **Example output**
 
-<img src="https://raw.githubusercontent.com/Baro-coder/FINS-2.0/develop/img/example_graph_def.png" width=80% height=80%>
+<img src="https://raw.githubusercontent.com/Baro-coder/FINS-2.0/master/img/example_graph_def.png" width=80% height=80%>
 
 ---
 
@@ -82,7 +82,7 @@ python ./fins-py/tools/graphs/graph_gps.py ./data/norm/gps.csv ./data/proc/gps.c
 
 *Ex. 1*
 
-<img src="https://raw.githubusercontent.com/Baro-coder/FINS-2.0/develop/img/example_graph_gps.png" width=60% height=60%>
+<img src="https://raw.githubusercontent.com/Baro-coder/FINS-2.0/master/img/example_graph_gps.png" width=60% height=60%>
 
 *Ex. 2*
 
