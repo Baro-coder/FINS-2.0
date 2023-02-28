@@ -2,4 +2,6 @@
 .venv/
 .nato-tide/
 **/__pycache__/
+**/bin/
+**/data/
 get_token

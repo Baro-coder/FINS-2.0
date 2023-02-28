@@ -41,7 +41,7 @@ FINS/
 
 Data collected from UAVs logs.
 
-- `calc` : Calculated CSV data
+- `proc` : Processed CSV data
 - `norm` : Normalized CSV data
 - `raw`  : Raw CSV data
 - `tlog` : Original *.tlog* files
