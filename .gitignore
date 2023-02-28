@@ -2,6 +2,6 @@
 .venv/
 .nato-tide/
 **/__pycache__/
-**/bin/
+fins-cpp/bin/
 **/data/
 get_token
