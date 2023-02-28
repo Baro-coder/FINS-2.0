@@ -1,50 +1,136 @@
 #include "fins.hpp"
 
+/* *** Globals *** */
+
+//  ** CSV Handlers
+CSVReader *readerGyro, *readerAcc, *readerAlt, *readerBearing;
+CSVWriter *writerAngles, *writerAccFil, *writerAccCmp, *writerVel, *writerVelCmp, *writerGps;
+
+// ** Filters
+KalmanFilter *kalman;       // Kalman Filter Handler   
+MadgwickFilter *madgwick;   // Madgwick Filter Handler
+
+/* ============================================================================================================ */
+
+/* *** Functions *** */
+
+int initCSVHandlers()
+{
+    // CSV Readers init
+    std::cout << "  * CSV Readers init:" << std::endl;
+    std::cout << "    - Gyro:       ";
+    readerGyro      = new CSVReader(filenameNormDataGyro, CSV_DELIMITER);
+    std::cout << "OK" << std::endl;
+
+    std::cout << "    - Acc:        ";
+    readerAcc       = new CSVReader(filenameNormDataAcc, CSV_DELIMITER);
+    std::cout << "OK" << std::endl;
+
+    std::cout << "    - Alt:        ";
+    readerAlt       = new CSVReader(filenameNormDataAlt, CSV_DELIMITER);
+    std::cout << "OK" << std::endl;
+    
+    std::cout << "    - Bearing:    ";
+    readerBearing   = new CSVReader(filenameNormDataBearing, CSV_DELIMITER);
+    std::cout << "OK" << std::endl << std::endl;
+
+    // CSV Writers init
+    std::cout << "  * CSV Writers init:" << std::endl;
+    std::cout << "    - Angles:     ";
+    writerAngles    = new CSVWriter(filenameProcDataAngles, CSV_DELIMITER);
+    if (writerAngles->init(headersAngles) != 0) {
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    std::cout << "    - AccFil:     ";
+    writerAccFil    = new CSVWriter(filenameProcDataAccFil, CSV_DELIMITER);
+    if (writerAccFil->init(headersAccFil) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    std::cout << "    - AccCmp:     ";
+    writerAccCmp    = new CSVWriter(filenameProcDataAccCmp, CSV_DELIMITER);
+    if (writerAccCmp->init(headersAccCmp) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    std::cout << "    - Vel:        ";
+    writerVel       = new CSVWriter(filenameProcDataVel, CSV_DELIMITER);
+    if (writerVel->init(headersVel) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    std::cout << "    - VelCmp:     ";
+    writerVelCmp    = new CSVWriter(filenameProcDataVelCmp, CSV_DELIMITER);
+    if (writerVelCmp->init(headersVelCmp) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    std::cout << "    - GPS:        ";
+    writerGps       = new CSVWriter(filenameProcDataGps, CSV_DELIMITER);
+    if (writerGps->init(headersGps) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    return 0;
+}
+
+int initFilters()
+{
+    std::cout << "  * Kalman:       ";
+    kalman = new KalmanFilter();
+    if(kalman->init() != 0) {
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    std::cout << "  * Madgwick:     ";
+    madgwick = new MadgwickFilter();
+    if(madgwick->init() != 0) {
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    return 0;
+}
+
+/* ============================================================================================================ */
+
+/* *** Main Drive *** */
 
 int main(int argc, char **argv)
 {
-    // CSV Handlers
-    CSVReader *normGeoReader = new CSVReader(filenameNormDataAcc, ',');
-    CSVWriter *procGeoWriter = new CSVWriter(filenameProcDataAccFil, ',');
-
-    // Headers and content
-    std::vector<std::string> geoHeaders; 
-    std::vector<std::vector<std::string>> normGeoContent;
-
-    // Reading input file
-    std::cout << "Input file reading..." << std::endl;
-    if (normGeoReader->read() != 0) {
-        std::cout << "Could not open the file!" << std::endl;
-        return 1;
+    std::cout << "CSV Handlers init..." << std::endl;
+    if(initCSVHandlers() != 0) {
+        std::cout << std::endl << "CSV Handlers Init Fail!" << std::endl;
+        return EXIT_FAILURE;
     }
-    std::cout << "Done." << std::endl << std::endl;
-    std::cout << "  Summary:" << std::endl;
-    std::cout << "    Columns:  " << normGeoReader->getColumnsCount() << std::endl;
-    std::cout << "    Rows:     " << normGeoReader->getRowsCount() << std::endl << std::endl;
+    std::cout << std::endl;
 
-    geoHeaders = normGeoReader->getHeaders();
-    normGeoContent = normGeoReader->getContent();
-
-    // Output file init
-    std::cout << "Output file init..." << std::endl;
-    if (procGeoWriter->init(geoHeaders) != 0){
-        std::cout << "Output file init : Error!" << std::endl;
-        return 1;
+    std::cout << "Filters init..." << std::endl;
+    if (initFilters() != 0) {
+        std::cout << std::endl << "Filters Init Fail!" << std::endl;
+        return EXIT_FAILURE;
     }
-    std::cout << "Done." << std::endl << std::endl;
+    std::cout << std::endl;
 
-    // Data processing and storing into output file
     std::cout << "Data processing..." << std::endl;
-    for (int i = 0; i < normGeoContent.size(); i++)
-    {
-        if (i % 3 == 0)
-        {
-            procGeoWriter->write(normGeoContent[i]);
-        }
-    }
-    std::cout << "Done." << std::endl << std::endl;
-    std::cout << "  Summary:" << std::endl;
-    std::cout << "    Written rows:  " << procGeoWriter->getWrittenRowsCount() << std::endl;
 
-    return 0;
+    std::cout << "Done." << std::endl;
+
+    return EXIT_SUCCESS;
 }

@@ -15,28 +15,29 @@
 #include <geo/geo.hpp>              // Geo calculation, Grids representation
 #include <vel/vel.hpp>              // Velocity estimator
 
+/* ============================================================================================================ */
 
 /* *** Definitions *** */
-
-/* 
-    GPS first row:
-    timestamp(ms)       lattitude   longitude
-    451809.8220214844   485467007   351016993
-*/
 #define GPS_START_LAT 48.5467007  // Starting point GPS lattitude
 #define GPS_START_LON 35.1016993  // Starting point GPS longitude
 
+/* ============================================================================================================ */
 
 /* *** Constants *** */
 
-// ** INPUT FILES **
+//  ** CSV Files **
+#define CSV_DELIMITER ','
+
+//   * INPUT FILES *
+//  Filenames
 std::string normDataDir = "/home/bszyk/Projects/FINS/data/norm/";   // Normalized data directory
 std::string filenameNormDataGyro = normDataDir + "gyro.csv";        // Normalized gyroscope data        - input filename
 std::string filenameNormDataAcc  = normDataDir + "acc.csv";         // Normalized accelerometer data    - input filename
 std::string filenameNormDataAlt  = normDataDir + "alt.csv";         // Normalized altitude data         - input filename
 std::string filenameNormDataBearing  = normDataDir + "bearing.csv"; // Normalized bearing data          - input filename
 
-// ** OUTPUT FILES **
+//   * OUTPUT FILES *
+//  Filenames
 std::string procDataDir = "/home/bszyk/Projects/FINS/data/proc/";   // Processed data directory
 std::string filenameProcDataAngles  = procDataDir + "angles.csv";   // Processed angles (pitch, roll) data          - output filename
 std::string filenameProcDataAccFil  = procDataDir + "acc.csv";      // Processed filetered accelerometer data       - output filename
@@ -45,10 +46,20 @@ std::string filenameProcDataVel     = procDataDir + "vel.csv";      // Processed
 std::string filenameProcDataVelCmp  = procDataDir + "velCmp.csv";   // Processed compansated velocity data          - output filename
 std::string filenameProcDataGps     = procDataDir + "gps.csv";      // Processed GPS data                           - output filename
 
+// Headers
+std::vector<std::string> headersAngles  {"timestamp", "pitch", "roll", "yaw"};
+std::vector<std::string> headersAccFil  {"timestamp", "accFilX", "accFilY", "accFilZ"};
+std::vector<std::string> headersAccCmp  {"timestamp", "accCmpX", "accCmpY", "accCmpZ"};
+std::vector<std::string> headersVel     {"timestamp", "velX", "velY", "velZ", "vel"};
+std::vector<std::string> headersVelCmp  {"timestamp", "velCmpX", "velCmpY", "velCmpZ", "velCmp"};
+std::vector<std::string> headersGps     {"timestamp", "lattitude", "longitude"};
+
+/* ============================================================================================================ */
 
 /* *** Structures *** */
 
 
+/* ============================================================================================================ */
 
 /* *** PROCEDURE ***
 
@@ -75,8 +86,16 @@ std::string filenameProcDataGps     = procDataDir + "gps.csv";      // Processed
     3. Store every step calculation into certain CSV file.
 */
 
+/* ============================================================================================================ */
+
 /* *** Functions *** */
-int initCSVHandlers();  // Initialize CSV readers and writers
-int initFilters();      // Initialize Madgwick and Kalman filters
+
+// Initialize CSV readers and writers
+//  Returns `0` on success and `1` on errors
+int initCSVHandlers();
+
+// Initialize Kalman and Madgwick filters
+//  Returns `0` on success and `1` on errors
+int initFilters();
 
 #endif
