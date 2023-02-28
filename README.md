@@ -1,6 +1,6 @@
-# `FINS`
+# **`FINS`**
 
-## `FLORA Inertial Navigation System`
+## **FLORA Inertial Navigation System**
 
 ---
 
@@ -17,46 +17,65 @@ In cooperation with others offline navigation systems, like *VNS* (Visual Naviga
 ## **Structure**
 
 ``` text
-FINS/
-├── data
-│   ├── calc
-│   ├── norm
-│   ├── raw
-│   └── tlogs
+FINS
+├── bin                     'Main bash binaries'
 │
-├── fins-cpp
-│   ├── bin
-│   ├── lib
-│   ├── Makefile
-│   └── src
+├── data                    'Data Directory'
+│   ├── proc                    'Processed data'
+│   ├── norm                    'Normalized data'
+│   ├── raw                     'Raw data'
+│   └── tlogs                   'ArduPilot tlogs'
 │
-└── fins-py
-    ├── fins
-    │   ├── conf
-    │   └── log
-    └── fins.py
+├── fins-cpp                'C++ project directory'
+│   ├── bin                     'binaries'
+│   ├── lib                     'liraries'
+│   └── src                     'sources'
+│
+├── fins-py                 'Python project directory'
+│   └── tools                   'Diagnostic tools'
+│       ├── comparators             'Datasets comparators'
+│       ├── graphs                  'Graphs generators'
+│       └── map                     'Maps visualizers'
+│
+└── img                     'Images'
+
 ```
 
-### **Data** 
+### [**`bin`**](https://github.com/Baro-coder/FINS-2.0/bin)
+
+Main bash scripts to executing complex functions using developed scripts and programs with provided data.
+
+---
+
+### [**`data`**](https://github.com/Baro-coder/FINS-2.0/data)
 
 Data collected from UAVs logs.
 
 - `proc` : Processed CSV data
 - `norm` : Normalized CSV data
 - `raw`  : Raw CSV data
-- `tlog` : Original *.tlog* files
-
-### **fins-cpp**
-
-#### C++ project directory.
-
-Project includes compute module software to estimate UAV velocity using UAV inertial data and to calculate current position coordinates (latitude, longitude) using previous position, course (heading) and previously estimated velocity.
-
-### **fins-py**
-
-Python project directory.
-
-Project includes reading data files, data normalization and visualization using plots and map paths.
+- `tlog` : ArduPilot *.tlog* files
 
 ---
 
+### [**`fins-cpp`**](https://github.com/Baro-coder/FINS-2.0/fins-cpp)
+
+#### **C++ project directory**
+
+Project includes compute module software to estimate UAV velocity using UAV inertial data and to calculate current position coordinates (latitude, longitude) using previous position, course (heading) and previously estimated velocity.
+
+---
+
+### [**`fins-py`**](https://github.com/Baro-coder/FINS-2.0/fins-py)
+
+#### **Python project directory**
+
+Project includes datasets comparators and visualizers.
+
+---
+
+### [**`img`**](https://github.com/Baro-coder/FINS-2.0/img)
+
+#### **Images directory**
+
+Directory includes example graphs, maps and other complex outputs.

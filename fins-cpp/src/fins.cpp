@@ -1,85 +1,150 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <sstream>
-
 #include "fins.hpp"
 
-/* *** PROCEDURE ***
+/* *** Globals *** */
 
-    1. Get input data from CSV files.
+//  ** CSV Handlers
+CSVReader *readerGyro, *readerAcc, *readerAlt, *readerBearing;
+CSVWriter *writerAngles, *writerAccFil, *writerAccCmp, *writerVel, *writerVelCmp, *writerGps;
 
-    2. Process data row by row:
+// ** Filters
+KalmanFilter *kalman;       // Kalman Filter Handler   
+MadgwickFilter *madgwick;   // Madgwick Filter Handler
 
-        2.1. Filter Gyro, Accel data.
+/* ============================================================================================================ */
 
-        2.2. Calculate roll, pitch angles.
+/* *** Functions *** */
 
-        2.3. Compensate gravity from accel data.
+int initCSVHandlers()
+{
+    // CSV Readers init
+    std::cout << "  * CSV Readers init:" << std::endl;
+    std::cout << "    - Gyro:       ";
+    readerGyro      = new CSVReader(filenameNormDataGyro, CSV_DELIMITER);
+    std::cout << "OK" << std::endl;
 
-        2.4. ??? Compensate wind ???
+    std::cout << "    - Acc:        ";
+    readerAcc       = new CSVReader(filenameNormDataAcc, CSV_DELIMITER);
+    std::cout << "OK" << std::endl;
 
-        2.5. Calculate component velocities X, Y, Z
+    std::cout << "    - Alt:        ";
+    readerAlt       = new CSVReader(filenameNormDataAlt, CSV_DELIMITER);
+    std::cout << "OK" << std::endl;
+    
+    std::cout << "    - Bearing:    ";
+    readerBearing   = new CSVReader(filenameNormDataBearing, CSV_DELIMITER);
+    std::cout << "OK" << std::endl << std::endl;
 
-        2.6. Integrate it into linear velocity.
+    // CSV Writers init
+    std::cout << "  * CSV Writers init:" << std::endl;
+    std::cout << "    - Angles:     ";
+    writerAngles    = new CSVWriter(filenameProcDataAngles, CSV_DELIMITER);
+    if (writerAngles->init(headersAngles) != 0) {
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
 
-        2.7. Calculate displacement vector.
+    std::cout << "    - AccFil:     ";
+    writerAccFil    = new CSVWriter(filenameProcDataAccFil, CSV_DELIMITER);
+    if (writerAccFil->init(headersAccFil) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
 
-        2.8. Calculate current Geo Localization.
+    std::cout << "    - AccCmp:     ";
+    writerAccCmp    = new CSVWriter(filenameProcDataAccCmp, CSV_DELIMITER);
+    if (writerAccCmp->init(headersAccCmp) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
 
-    3. Store every step calculation into certain CSV file.
-*/
+    std::cout << "    - Vel:        ";
+    writerVel       = new CSVWriter(filenameProcDataVel, CSV_DELIMITER);
+    if (writerVel->init(headersVel) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
 
+    std::cout << "    - VelCmp:     ";
+    writerVelCmp    = new CSVWriter(filenameProcDataVelCmp, CSV_DELIMITER);
+    if (writerVelCmp->init(headersVelCmp) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    std::cout << "    - GPS:        ";
+    writerGps       = new CSVWriter(filenameProcDataGps, CSV_DELIMITER);
+    if (writerGps->init(headersGps) != 0){
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    return 0;
+}
+
+int initFilters()
+{
+    std::cout << "  * Kalman:       ";
+    kalman = new KalmanFilter();
+    if(kalman->init() != 0) {
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    std::cout << "  * Madgwick:     ";
+    madgwick = new MadgwickFilter();
+    if(madgwick->init() != 0) {
+        std::cout << "FAIL" << std::endl;
+        return 1;
+    }
+    std::cout << "OK" << std::endl;
+
+    return 0;
+}
+
+/* ============================================================================================================ */
+
+/* *** Main Drive *** */
 
 int main(int argc, char **argv)
 {
-    // Filenames
-    std::string normGeoFilename = "/home/bszyk/Projects/FINS/data/norm/geo.csv";
-    std::string procGeoFilename = "/home/bszyk/Projects/FINS/data/proc/geo.csv";
-
-    // CSV Handlers
-    CSVReader *normGeoReader = new CSVReader(normGeoFilename, ',');
-    CSVWriter *procGeoWriter = new CSVWriter(procGeoFilename, ',');
-
-    // Headers and content
-    std::vector<std::string> geoHeaders; 
-    std::vector<std::vector<std::string>> normGeoContent;
-
-    // Reading input file
-    std::cout << "Input file reading..." << std::endl;
-    if (normGeoReader->read() != 0) {
-        std::cout << "Could not open the file!" << std::endl;
-        return 1;
+    /* *** INIT ****/
+    //  ** CSV Handlers
+    std::cout << "CSV Handlers init..." << std::endl;
+    if(initCSVHandlers() != 0) {
+        std::cout << std::endl << "CSV Handlers Init Fail!" << std::endl;
+        return EXIT_FAILURE;
     }
-    std::cout << "Done." << std::endl << std::endl;
-    std::cout << "  Summary:" << std::endl;
-    std::cout << "    Columns:  " << normGeoReader->getColumnsCount() << std::endl;
-    std::cout << "    Rows:     " << normGeoReader->getRowsCount() << std::endl << std::endl;
+    std::cout << "  Done." << std::endl << std::endl;
 
-    geoHeaders = normGeoReader->getHeaders();
-    normGeoContent = normGeoReader->getContent();
-
-    // Output file init
-    std::cout << "Output file init..." << std::endl;
-    if (procGeoWriter->init(geoHeaders) != 0){
-        std::cout << "Output file init : Error!" << std::endl;
-        return 1;
+    //  ** Filters
+    std::cout << "Filters init..." << std::endl;
+    if (initFilters() != 0) {
+        std::cout << std::endl << "Filters Init Fail!" << std::endl;
+        return EXIT_FAILURE;
     }
-    std::cout << "Done." << std::endl << std::endl;
+    std::cout << "  Done." << std::endl << std::endl;
 
-    // Data processing and storing into output file
+    /* *** READING *** */
+    std::cout << "Data reading..." << std::endl;
+
+    std::cout << "  Done." << std::endl << std::endl;
+
+    /* *** PROCESSING *** */
     std::cout << "Data processing..." << std::endl;
-    for (int i = 0; i < normGeoContent.size(); i++)
-    {
-        if (i % 3 == 0)
-        {
-            procGeoWriter->write(normGeoContent[i]);
-        }
-    }
-    std::cout << "Done." << std::endl << std::endl;
-    std::cout << "  Summary:" << std::endl;
-    std::cout << "    Written rows:  " << procGeoWriter->getWrittenRowsCount() << std::endl;
 
-    return 0;
+    std::cout << "  Done." << std::endl << std::endl;
+
+    /* *** STORING *** */
+    std::cout << "Data storing..." << std::endl;
+
+    std::cout << "  Done." << std::endl << std::endl;
+
+    return EXIT_SUCCESS;
 }
