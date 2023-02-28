@@ -114,23 +114,37 @@ int initFilters()
 
 int main(int argc, char **argv)
 {
+    /* *** INIT ****/
+    //  ** CSV Handlers
     std::cout << "CSV Handlers init..." << std::endl;
     if(initCSVHandlers() != 0) {
         std::cout << std::endl << "CSV Handlers Init Fail!" << std::endl;
         return EXIT_FAILURE;
     }
-    std::cout << std::endl;
+    std::cout << "  Done." << std::endl << std::endl;
 
+    //  ** Filters
     std::cout << "Filters init..." << std::endl;
     if (initFilters() != 0) {
         std::cout << std::endl << "Filters Init Fail!" << std::endl;
         return EXIT_FAILURE;
     }
-    std::cout << std::endl;
+    std::cout << "  Done." << std::endl << std::endl;
 
+    /* *** READING *** */
+    std::cout << "Data reading..." << std::endl;
+
+    std::cout << "  Done." << std::endl << std::endl;
+
+    /* *** PROCESSING *** */
     std::cout << "Data processing..." << std::endl;
 
-    std::cout << "Done." << std::endl;
+    std::cout << "  Done." << std::endl << std::endl;
+
+    /* *** STORING *** */
+    std::cout << "Data storing..." << std::endl;
+
+    std::cout << "  Done." << std::endl << std::endl;
 
     return EXIT_SUCCESS;
 }
