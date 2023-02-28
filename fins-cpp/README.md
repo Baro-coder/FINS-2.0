@@ -1,13 +1,10 @@
-# FINS C++
+# **`FINS C++`**
 
-## Description
+## **Description**
 
-### **Procedure**
+C++ Projects includes CSV files handlers libraries, algorithms analyzing telemetry data received from inertial sensors and algorithms calculating current geolocalization using the previous localization info, calculated and raw telemetry data.
 
-1. CSV read
-2. Data processing
-3. CSV write
-4. Further analysis in python module...
+Project is sandbox enviroment to develop the most optimal solution to deploy on real UAV component. 
 
 ---
 
@@ -20,6 +17,7 @@
    - Kalman
    - Madgwick
 3. Velocity estimator
-4. Geographical localization calculator
+4. Geographic calculator
 
 ---
+
