@@ -1,46 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <sstream>
-
 #include "fins.hpp"
-
-/* *** PROCEDURE ***
-
-    1. Get input data from CSV files.
-
-    2. Process data row by row:
-
-        2.1. Filter Gyro, Accel data.
-
-        2.2. Calculate roll, pitch angles.
-
-        2.3. Compensate gravity from accel data.
-
-        2.4. ??? Compensate wind ???
-
-        2.5. Calculate component velocities X, Y, Z
-
-        2.6. Integrate it into linear velocity.
-
-        2.7. Calculate displacement vector.
-
-        2.8. Calculate current Geo Localization.
-
-    3. Store every step calculation into certain CSV file.
-*/
 
 
 int main(int argc, char **argv)
 {
-    // Filenames
-    std::string normGeoFilename = "/home/bszyk/Projects/FINS/data/norm/geo.csv";
-    std::string procGeoFilename = "/home/bszyk/Projects/FINS/data/proc/geo.csv";
-
     // CSV Handlers
-    CSVReader *normGeoReader = new CSVReader(normGeoFilename, ',');
-    CSVWriter *procGeoWriter = new CSVWriter(procGeoFilename, ',');
+    CSVReader *normGeoReader = new CSVReader(filenameNormDataAcc, ',');
+    CSVWriter *procGeoWriter = new CSVWriter(filenameProcDataAccFil, ',');
 
     // Headers and content
     std::vector<std::string> geoHeaders; 
