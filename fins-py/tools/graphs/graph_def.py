@@ -2,26 +2,13 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
-'''
-    Description:
-        Program to draw plots by data from csv files.
-        All data are scaled to ``THE SAME`` Y axis scale.
-    
-    Params:
-        <datafilepath> : Path to csv file with data to visualization.
-                            It is available to pass multiple paths.
-                            
-    Example:
-        python plot_scale_single.py ./data/data1.csv ./data/data2.csv ./data/org/dataorg1.csv
-        
-'''
 
 def main() -> None:
     # Pos Args check
     if len(sys.argv) < 2:
         print('Incorrect usage! Pass the csv filepath.')
         print('Usage example:')
-        print(f'    python {sys.argv[0]} ./data/data1.csv ./data/data2.csv')
+        print(f'    python {sys.argv[0]} ./data/data1.csv ./data/data2.csv ./data/dataN.csv')
         sys.exit(1)
     
     # Examine every passed csv file
@@ -39,6 +26,10 @@ def main() -> None:
         
         except FileNotFoundError as e:
             print('Not Found!')
+
+        except TypeError as e:
+            print('Invalid data!')
+
     
     # Show plots
     plt.show()

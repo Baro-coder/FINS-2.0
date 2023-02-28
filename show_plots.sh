@@ -1,32 +1,10 @@
 #!/bin/bash
 
-# One Scale:
-#   Norm:
-#   - Acc
-#   - Gyro
-#   - Alt
-#   - Bearing
-#   - Speed
-#
-#   Proc:
-#   - Angles
-#   - AccFil
-#   - AccCmp
-#   - Vel
-#   - VelCmp
-
-# Two Scales:
-#   Norm:
-#   - GPS
-#   Proc:
-#   - GPS
-
-
 # DIRECTORIES
-DIR_PRG=/home/bszyk/Projects/FINS/fins-py
-DIR_DATA=/home/bszyk/Projects/FINS/data     # Data dir
-DIR_NORM="$DIR_DATA"/norm                   # Normalized data dir
-DIR_PROC="$DIR_DATA"/proc                   # Processed  data dir
+DIR_PRG=/home/bszyk/Projects/FINS/fins-py/plots     # Programs dir
+DIR_DATA=/home/bszyk/Projects/FINS/data             # Data dir
+DIR_NORM="$DIR_DATA"/norm                           # Normalized data dir
+DIR_PROC="$DIR_DATA"/proc                           # Processed  data dir
 
 # PROGRAMS
 plotGpsProgram="$DIR_PRG"/plot_gps.py
@@ -35,7 +13,6 @@ plotProgram="$DIR_PRG"/plot.py
 # ARRAYS
 gpsFiles=()
 files=()
-
 
 # COLLECT
 printf " Collecting data..."
