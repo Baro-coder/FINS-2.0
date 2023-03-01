@@ -49,7 +49,7 @@ python -V ; pip -V
 ```
 
 3.2. gcc / g++:
-```
+```console
 gcc --version ; g++ --version
 ```
 
