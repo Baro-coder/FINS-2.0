@@ -4,9 +4,40 @@
 
 Directory includes python diagnostic tools which can be valuable in project development process, for example: graphs generators, map paths visualizers, datasets comparators and others.
 
+There is also included console Python application to run diagnostic tests and easier data analysis.
+
 ---
 
-## **Programs**
+## **Console App**
+
+**Description**
+
+> Not developed yet
+
+
+**Outputs**
+
+*Welcome*
+
+```console
+
+  ______  _____     _   _      _____   
+ |  ____||_   _|   | \ | |    / ____|  
+ | |__     | |     |  \| |   | (___    
+ |  __|    | |     | . ` |    \___ \   
+ | | _    _| |_  _ | |\  | _  ____) |_ 
+ |_|(_)  |_____|(_)|_| \_|(_)|_____/(_)
+
+
+
+FINS-App$> 
+```
+
+> ...
+
+---
+
+## **Tools**
 
 ## Graphs
 
